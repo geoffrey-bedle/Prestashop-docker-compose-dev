@@ -2,20 +2,26 @@ version: "3.9"
 
 services:
   prestashop:
-    image: prestashop/prestashop:1.7.8.7
+    image: prestashop/prestashop:${PS_VERSION}
     environment:
       - DB_SERVER=db
-      - DB_NAME=presta
-      - DB_USER=presta
-      - DB_PASSWD=presta
-      - DB_PREFIX=ps178_
-      - PS_DEV_MODE=1
-      - PS_DEMO_MODE=1
-      - PS_INSTALL_AUTO=1
-      - PS_DOMAIN=localhost:8080
-      - PS_FOLDER_ADMIN=manage
-      - ADMIN_MAIL=demo@prestashop.com
-      - ADMIN_PASSWD=prestashop_demo
+      - DB_NAME=${MYSQL_DATABASE}
+      - DB_USER=${MYSQL_USER}
+      - DB_PASSWD=${MYSQL_PASSWORD}
+      - DB_PREFIX=${DB_PREFIX}
+      - PS_DEV_MODE=${PS_DEV_MODE}
+      - PS_DEMO_MODE=${PS_DEMO_MODE}
+      - PS_INSTALL_AUTO=${PS_INSTALL_AUTO}
+      - PS_DOMAIN=${PS_DOMAIN}:8080
+      - PS_FOLDER_ADMIN=${PS_FOLDER_ADMIN}
+      - ADMIN_MAIL=${ADMIN_MAIL}
+      - ADMIN_PASSWD=${ADMIN_PASSWD}
+      - PS_LANGUAGE=${PS_LANGUAGE}
+      - PS_COUNTRY=${PS_COUNTRY}
+    volumes:
+      - type: bind
+        source: .
+        target: /var/www/html/modules/${PS_MODULE_NAME}  
     links:
       - db
     depends_on:
@@ -34,10 +40,10 @@ services:
     image: mysql:8
     command: --default-authentication-plugin=mysql_native_password
     environment:
-      - MYSQL_ROOT_PASSWORD=presta
-      - MYSQL_DATABASE=presta
-      - MYSQL_USER=presta
-      - MYSQL_PASSWORD=presta
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     restart: always
     volumes:
       - type: volume
